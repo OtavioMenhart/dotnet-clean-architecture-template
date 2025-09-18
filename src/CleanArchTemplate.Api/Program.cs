@@ -1,4 +1,5 @@
 using CleanArchTemplate.Api.Filters;
+using CleanArchTemplate.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<ClaimsValidationMiddleware>();
 
 app.MapControllers();
 
