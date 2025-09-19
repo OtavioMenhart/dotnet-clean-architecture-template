@@ -2,6 +2,7 @@
 using CleanArchTemplate.Application.Handlers;
 using CleanArchTemplate.Application.UseCases.Common;
 using CleanArchTemplate.Application.UseCases.Product.CreateProduct;
+using CleanArchTemplate.Application.UseCases.Product.GetAllProducts;
 using CleanArchTemplate.Application.UseCases.Product.GetProductById;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,15 @@ namespace CleanArchTemplate.Api.Controllers
     {
         private readonly IHandler<CreateProductCommand, ProductOutput> _createProductHandler;
         private readonly IHandler<GetProductByIdQuery, ProductOutput> _getProductByIdHandler;
+        private readonly IHandler<GetAllProductsQuery, GetAllProductsOutput> _getAllProductsHandler;
 
         public ProductController(IHandler<CreateProductCommand, ProductOutput> createProductHandler,
-            IHandler<GetProductByIdQuery, ProductOutput> getProductByIdHandler)
+            IHandler<GetProductByIdQuery, ProductOutput> getProductByIdHandler,
+            IHandler<GetAllProductsQuery, GetAllProductsOutput> getAllProductsHandler)
         {
             _createProductHandler = createProductHandler;
             _getProductByIdHandler = getProductByIdHandler;
+            _getAllProductsHandler = getAllProductsHandler;
         }
 
         /// <summary>
@@ -60,6 +64,40 @@ namespace CleanArchTemplate.Api.Controllers
                 return NotFound();
 
             return Ok(new ApiResponse<ProductOutput>(result));
+        }
+
+        /// <summary>
+        /// Retrieves a paginated list of all products.
+        /// </summary>
+        /// <remarks>This method supports pagination through the <paramref name="pageNumber"/> and
+        /// <paramref name="pageSize"/> parameters. If no products are found for the specified page, a 404 (Not Found)
+        /// response is returned.</remarks>
+        /// <param name="pageNumber">The page number to retrieve. Must be 1 or greater. Defaults to 1.</param>
+        /// <param name="pageSize">The number of products per page. Must be 1 or greater. Defaults to 10.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a paginated list of products wrapped in an  <see
+        /// cref="ApiResponseList{T}"/> with a status code of 200 (OK) if products are found. Returns a <see
+        /// cref="ProblemDetails"/> with a status code of 404 (Not Found) if no products are available. Returns a <see
+        /// cref="ProblemDetails"/> with a status code of 500 (Internal Server Error) in case of an unexpected error.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseList<ProductOutput>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllProducts(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10) 
+        { 
+            var query = new GetAllProductsQuery(pageNumber, pageSize);
+            var products = await _getAllProductsHandler.Handle(query, CancellationToken.None);
+
+            if (products == null || products.Products == null || !products.Products.Any())
+                return NotFound();
+
+            var pagedResponse = new ApiResponseList<ProductOutput>(
+                products.Products, 
+                products.PageNumber, 
+                products.PageSize, 
+                products.TotalCount);
+            return Ok(pagedResponse);
         }
     }
 }

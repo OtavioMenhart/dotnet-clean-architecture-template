@@ -20,6 +20,18 @@ namespace CleanArchTemplate.Infrastructure.Persistence
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
             => await _dbSet.ToListAsync();
 
+        public virtual async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            return await _dbSet
+                .OrderBy(e => e.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public virtual async Task AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);

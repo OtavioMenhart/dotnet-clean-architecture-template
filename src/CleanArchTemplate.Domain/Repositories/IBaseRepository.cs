@@ -6,6 +6,7 @@ namespace CleanArchTemplate.Domain.Repositories
     {
         Task<TEntity?> GetByIdAsync(Guid id);
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize);
         Task AddAsync(TEntity entity);
         Task AddRangeAsync(IEnumerable<TEntity> entities);
         Task UpdateAsync(TEntity entity);
