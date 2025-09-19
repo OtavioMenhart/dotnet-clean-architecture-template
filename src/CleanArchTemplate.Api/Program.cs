@@ -1,6 +1,9 @@
 using CleanArchTemplate.Api.Filters;
 using CleanArchTemplate.Api.Middlewares;
+using CleanArchTemplate.Application.DependencyInjection;
 using CleanArchTemplate.Infrastructure.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +21,25 @@ builder.Services.RegisterRepositories();
 builder.Services.RegisterRabbitMq(builder.Configuration);
 builder.Services.RegisterRabbitMqPublisher(builder.Configuration);
 
+// Handlers
+builder.Services.AddApplicationHandlers();
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<GlobalExceptionFilter>();
 });
+
+// Swagger configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "CleanArchTemplate", Version = "v1" });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -30,6 +48,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.MapOpenApi();
 }
 

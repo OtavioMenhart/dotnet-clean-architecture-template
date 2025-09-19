@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-namespace CleanArchTemplate.Api.Middlewares
+﻿namespace CleanArchTemplate.Api.Middlewares
 {
     public class ClaimsValidationMiddleware
     {
