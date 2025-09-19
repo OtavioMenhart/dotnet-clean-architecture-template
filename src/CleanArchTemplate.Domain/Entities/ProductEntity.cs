@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CleanArchTemplate.Domain.Entities
 {
-    public class Product : BaseEntity
+    public class ProductEntity : BaseEntity
     {
         [Required]
         [MaxLength(EntitiesConstants.Product_Name_Max_Length)]
@@ -13,7 +13,7 @@ namespace CleanArchTemplate.Domain.Entities
         [Range(EntitiesConstants.Product_UnitPrice_Min_Value, double.MaxValue)]
         public double UnitPrice { get; private set; }
 
-        public Product(string name, double unitPrice)
+        public ProductEntity(string name, double unitPrice)
         {
             SetName(name);
             SetUnitPrice(unitPrice);

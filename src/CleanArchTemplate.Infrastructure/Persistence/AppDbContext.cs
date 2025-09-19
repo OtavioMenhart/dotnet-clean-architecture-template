@@ -5,7 +5,7 @@ namespace CleanArchTemplate.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductEntity> Products { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -17,7 +17,7 @@ namespace CleanArchTemplate.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>();
+            modelBuilder.Entity<ProductEntity>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
