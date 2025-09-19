@@ -17,9 +17,7 @@ namespace CleanArchTemplate.Application.UseCases.Product.CreateProduct
         public async Task<ProductOutput> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var product = new ProductEntity(request.Input.Name, request.Input.UnitPrice);
-
             await _productRepository.AddAsync(product);
-
             return ProductOutput.FromProductDomain(product);
         }
     }
