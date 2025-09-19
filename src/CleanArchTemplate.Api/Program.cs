@@ -1,9 +1,22 @@
 using CleanArchTemplate.Api.Filters;
 using CleanArchTemplate.Api.Middlewares;
+using CleanArchTemplate.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
 // Add services to the container.
+// Database
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.RegisterRepositories();
+
+// RabbitMQ
+builder.Services.RegisterRabbitMq(builder.Configuration);
+builder.Services.RegisterRabbitMqPublisher(builder.Configuration);
 
 builder.Services.AddControllers(options =>
 {
