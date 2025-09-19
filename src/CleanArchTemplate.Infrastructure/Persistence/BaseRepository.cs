@@ -1,0 +1,57 @@
+﻿using CleanArchTemplate.Domain.Entities;
+using CleanArchTemplate.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+namespace CleanArchTemplate.Infrastructure.Persistence
+{
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
+    {
+        protected readonly DbContext _context;
+        protected readonly DbSet<TEntity> _dbSet;
+        protected BaseRepository(DbContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<TEntity>();
+        }
+
+        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+            => await _dbSet.FindAsync(id);
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+            => await _dbSet.ToListAsync();
+
+        public virtual async Task AddAsync(TEntity entity)
+        {
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task UpdateAsync(TEntity entity)
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task DeleteAsync(Guid id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public virtual async Task<bool> ExistsAsync(Guid id)
+            => await _dbSet.FindAsync(id) != null;
+
+        public virtual async Task<int> CountAsync()
+            => await _dbSet.CountAsync();
+    }
+}
