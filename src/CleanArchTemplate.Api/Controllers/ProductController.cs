@@ -2,8 +2,10 @@
 using CleanArchTemplate.Application.Handlers;
 using CleanArchTemplate.Application.UseCases.Common;
 using CleanArchTemplate.Application.UseCases.Product.CreateProduct;
+using CleanArchTemplate.Application.UseCases.Product.DeleteProduct;
 using CleanArchTemplate.Application.UseCases.Product.GetAllProducts;
 using CleanArchTemplate.Application.UseCases.Product.GetProductById;
+using CleanArchTemplate.Application.UseCases.Product.UpdateProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchTemplate.Api.Controllers
@@ -15,14 +17,20 @@ namespace CleanArchTemplate.Api.Controllers
         private readonly IHandler<CreateProductCommand, ProductOutput> _createProductHandler;
         private readonly IHandler<GetProductByIdQuery, ProductOutput> _getProductByIdHandler;
         private readonly IHandler<GetAllProductsQuery, GetAllProductsOutput> _getAllProductsHandler;
+        private readonly IHandler<DeleteProductCommand, bool> _deleteProductHandler;
+        private readonly IHandler<UpdateProductCommand, ProductOutput> _updateProductHandler;
 
         public ProductController(IHandler<CreateProductCommand, ProductOutput> createProductHandler,
             IHandler<GetProductByIdQuery, ProductOutput> getProductByIdHandler,
-            IHandler<GetAllProductsQuery, GetAllProductsOutput> getAllProductsHandler)
+            IHandler<GetAllProductsQuery, GetAllProductsOutput> getAllProductsHandler,
+            IHandler<DeleteProductCommand, bool> deleteProductHandler,
+            IHandler<UpdateProductCommand, ProductOutput> updateProductHandler)
         {
             _createProductHandler = createProductHandler;
             _getProductByIdHandler = getProductByIdHandler;
             _getAllProductsHandler = getAllProductsHandler;
+            _deleteProductHandler = deleteProductHandler;
+            _updateProductHandler = updateProductHandler;
         }
 
         /// <summary>
@@ -36,7 +44,7 @@ namespace CleanArchTemplate.Api.Controllers
         /// <returns>An <see cref="IActionResult"/> containing an <see cref="ApiResponse{T}"/> with the created product details
         /// if the operation is successful. Returns a <see cref="ProblemDetails"/> response if an internal server error
         /// occurs.</returns>
-        [HttpPost("create-product")]
+        [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<ProductOutput>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductInput input)
@@ -84,8 +92,8 @@ namespace CleanArchTemplate.Api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllProducts(
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10) 
-        { 
+            [FromQuery] int pageSize = 10)
+        {
             var query = new GetAllProductsQuery(pageNumber, pageSize);
             var products = await _getAllProductsHandler.Handle(query, CancellationToken.None);
 
@@ -93,11 +101,52 @@ namespace CleanArchTemplate.Api.Controllers
                 return NotFound();
 
             var pagedResponse = new ApiResponseList<ProductOutput>(
-                products.Products, 
-                products.PageNumber, 
-                products.PageSize, 
+                products.Products,
+                products.PageNumber,
+                products.PageSize,
                 products.TotalCount);
             return Ok(pagedResponse);
+        }
+
+        /// <summary>
+        /// Deletes a product by its unique identifier.
+        /// </summary>
+        /// <param name="id">The product's unique identifier.</param>
+        /// <returns>NoContent if deleted, NotFound if not found, or ProblemDetails if error.</returns>
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            var command = new DeleteProductCommand(id);
+            var deleted = await _deleteProductHandler.Handle(command, CancellationToken.None);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Updates an existing product's information.
+        /// </summary>
+        /// <param name="id">The product's unique identifier.</param>
+        /// <param name="input">The updated product data.</param>
+        /// <returns>An ApiResponse with the updated product details, or NotFound if not found.</returns>
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<ProductOutput>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductInput input)
+        {
+            var command = new UpdateProductCommand(id, input);
+            var result = await _updateProductHandler.Handle(command, CancellationToken.None);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(new ApiResponse<ProductOutput>(result));
         }
     }
 }
