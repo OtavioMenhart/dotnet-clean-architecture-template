@@ -47,6 +47,7 @@ namespace CleanArchTemplate.Infrastructure.Persistence
         public virtual async Task UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
+            entity.SetUpdated();
             await _context.SaveChangesAsync();
         }
 

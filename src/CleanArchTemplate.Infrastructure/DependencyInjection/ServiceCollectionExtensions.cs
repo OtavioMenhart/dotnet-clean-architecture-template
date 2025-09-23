@@ -4,6 +4,8 @@ using CleanArchTemplate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using RabbitMq.Messaging.DependencyInjection;
 
 namespace CleanArchTemplate.Infrastructure.DependencyInjection
@@ -35,6 +37,27 @@ namespace CleanArchTemplate.Infrastructure.DependencyInjection
             services.AddRabbitMqPublisher();
             services.AddSingleton<IMessagingService, MessagingService>();
             return services;
+        }
+
+        public static IHostBuilder MigrateDatabase(this IHostBuilder hostBuilder)
+        {
+            hostBuilder.ConfigureServices((context, services) =>
+            {
+                using var scope = services.BuildServiceProvider().CreateScope();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
+                try
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    dbContext.Database.Migrate();
+                    logger.LogInformation("Database migration applied successfully.");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+                    throw;
+                }
+            });
+            return hostBuilder;
         }
     }
 }
