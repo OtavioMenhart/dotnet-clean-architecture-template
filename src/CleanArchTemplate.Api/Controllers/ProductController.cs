@@ -1,6 +1,6 @@
 ﻿using CleanArchTemplate.Api.Responses;
 using CleanArchTemplate.Application.Handlers;
-using CleanArchTemplate.Application.UseCases.Common;
+using CleanArchTemplate.Application.UseCases.Product.Common;
 using CleanArchTemplate.Application.UseCases.Product.CreateProduct;
 using CleanArchTemplate.Application.UseCases.Product.DeleteProduct;
 using CleanArchTemplate.Application.UseCases.Product.GetAllProducts;

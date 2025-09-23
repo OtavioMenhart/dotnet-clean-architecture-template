@@ -1,5 +1,4 @@
 ﻿using CleanArchTemplate.Application.Handlers;
-using CleanArchTemplate.Application.UseCases.Common;
 
 namespace CleanArchTemplate.Application.UseCases.Product.GetAllProducts
 {

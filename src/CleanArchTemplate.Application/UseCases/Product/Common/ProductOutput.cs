@@ -1,6 +1,6 @@
 ﻿using CleanArchTemplate.Domain.Entities;
 
-namespace CleanArchTemplate.Application.UseCases.Common
+namespace CleanArchTemplate.Application.UseCases.Product.Common
 {
     public class ProductOutput
     {
@@ -8,6 +8,7 @@ namespace CleanArchTemplate.Application.UseCases.Common
         public string Name { get; set; }
         public double UnitPrice { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public static ProductOutput FromProductDomain(ProductEntity product)
         {
@@ -16,7 +17,8 @@ namespace CleanArchTemplate.Application.UseCases.Common
                 Id = product.Id,
                 Name = product.Name,
                 UnitPrice = product.UnitPrice,
-                CreatedAt = product.CreatedAt
+                CreatedAt = product.CreatedAt,
+                UpdatedAt = product.UpdatedAt
             };
         }
     }

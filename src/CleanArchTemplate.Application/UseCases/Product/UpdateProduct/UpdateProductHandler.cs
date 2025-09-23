@@ -1,5 +1,5 @@
 ﻿using CleanArchTemplate.Application.Handlers;
-using CleanArchTemplate.Application.UseCases.Common;
+using CleanArchTemplate.Application.UseCases.Product.Common;
 using CleanArchTemplate.Domain.Entities;
 using CleanArchTemplate.Domain.Repositories;
 
