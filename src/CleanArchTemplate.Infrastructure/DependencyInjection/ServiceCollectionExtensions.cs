@@ -17,6 +17,8 @@ namespace CleanArchTemplate.Infrastructure.DependencyInjection
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 

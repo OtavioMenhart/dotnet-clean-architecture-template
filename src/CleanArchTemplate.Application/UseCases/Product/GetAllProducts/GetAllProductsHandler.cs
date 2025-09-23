@@ -14,13 +14,13 @@ namespace CleanArchTemplate.Application.UseCases.Product.GetAllProducts
             _productRepository = productRepository;
         }
 
-        public async Task<GetAllProductsOutput> Handle(GetAllProductsQuery request, CancellationToken cancellationToken = default)
+        public async Task<GetAllProductsOutput> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var totalProducts = await _productRepository.CountAsync();
+            var totalProducts = await _productRepository.CountAsync(cancellationToken);
             if (totalProducts == 0)
                 return new GetAllProductsOutput(Enumerable.Empty<ProductOutput>(), request.PageNumber, request.PageSize, 0);
 
-            var products = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize);
+            var products = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize, cancellationToken);
             return new GetAllProductsOutput(products.Select(ProductOutput.FromProductDomain), request.PageNumber, request.PageSize, totalProducts);
         }
     }

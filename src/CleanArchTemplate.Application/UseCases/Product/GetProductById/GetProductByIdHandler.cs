@@ -16,7 +16,7 @@ namespace CleanArchTemplate.Application.UseCases.Product.GetProductById
 
         public async Task<ProductOutput> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(request.Id);
+            var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
             return product != null ? ProductOutput.FromProductDomain(product) : null;
         }
     }

@@ -14,13 +14,13 @@ namespace CleanArchTemplate.Infrastructure.Persistence
             _dbSet = context.Set<TEntity>();
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
-            => await _dbSet.FindAsync(id);
+        public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+            => await _dbSet.FindAsync(id, cancellationToken);
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
-            => await _dbSet.ToListAsync();
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+            => await _dbSet.ToListAsync(cancellationToken);
 
-        public virtual async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize)
+        public virtual async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
@@ -29,42 +29,38 @@ namespace CleanArchTemplate.Infrastructure.Persistence
                 .OrderBy(e => e.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public virtual async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
         {
-            await _dbSet.AddRangeAsync(entities);
-            await _context.SaveChangesAsync();
+            await _dbSet.AddRangeAsync(entities, cancellationToken);
         }
 
-        public virtual async Task UpdateAsync(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             _dbSet.Update(entity);
             entity.SetUpdated();
-            await _context.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(Guid id)
+        public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await GetByIdAsync(id, cancellationToken);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
-                await _context.SaveChangesAsync();
             }
         }
 
-        public virtual async Task<bool> ExistsAsync(Guid id)
-            => await _dbSet.FindAsync(id) != null;
+        public virtual async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken)
+            => await _dbSet.FindAsync(id, cancellationToken) != null;
 
-        public virtual async Task<int> CountAsync()
-            => await _dbSet.CountAsync();
+        public virtual async Task<int> CountAsync(CancellationToken cancellationToken)
+            => await _dbSet.CountAsync(cancellationToken);
     }
 }

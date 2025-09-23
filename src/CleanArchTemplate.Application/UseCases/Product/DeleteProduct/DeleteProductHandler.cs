@@ -7,16 +7,19 @@ namespace CleanArchTemplate.Application.UseCases.Product.DeleteProduct
     public class DeleteProductHandler : IHandler<DeleteProductCommand, bool>
     {
         private readonly IBaseRepository<ProductEntity> _productRepository;
-        public DeleteProductHandler(IBaseRepository<ProductEntity> productRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public DeleteProductHandler(IBaseRepository<ProductEntity> productRepository, IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
-        public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken = default)
+        public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var exists = await _productRepository.ExistsAsync(request.Id);
+            var exists = await _productRepository.ExistsAsync(request.Id, cancellationToken);
             if (!exists) return false;
 
-            await _productRepository.DeleteAsync(request.Id);
+            await _productRepository.DeleteAsync(request.Id, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
             return true;
         }
     }
