@@ -16,9 +16,12 @@ namespace CleanArchTemplate.Application.UseCases.Product.GetAllProducts
 
         public async Task<GetAllProductsOutput> Handle(GetAllProductsQuery request, CancellationToken cancellationToken = default)
         {
+            var totalProducts = await _productRepository.CountAsync();
+            if (totalProducts == 0)
+                return new GetAllProductsOutput(Enumerable.Empty<ProductOutput>(), request.PageNumber, request.PageSize, 0);
+
             var products = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize);
-            var xx = products.Select(ProductOutput.FromProductDomain);
-            return new GetAllProductsOutput(products.Select(ProductOutput.FromProductDomain), request.PageNumber, request.PageSize);
+            return new GetAllProductsOutput(products.Select(ProductOutput.FromProductDomain), request.PageNumber, request.PageSize, totalProducts);
         }
     }
 }

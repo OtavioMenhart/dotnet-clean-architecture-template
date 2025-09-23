@@ -9,11 +9,11 @@ namespace CleanArchTemplate.Application.UseCases.Product.GetAllProducts
         public int PageSize { get; private set; }
         public int TotalCount { get; private set; }
 
-        public GetAllProductsOutput(IEnumerable<ProductOutput> products, int pageNumber, int pageSize)
+        public GetAllProductsOutput(IEnumerable<ProductOutput> products, int pageNumber, int pageSize, int totalCount)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;
-            TotalCount = products.Count();
+            TotalCount = totalCount;
             Products = products;
         }
     }
