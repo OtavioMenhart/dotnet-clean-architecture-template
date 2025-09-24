@@ -3,6 +3,7 @@ using CleanArchTemplate.Api.Middlewares;
 using CleanArchTemplate.Application.DependencyInjection;
 using CleanArchTemplate.Infrastructure.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,13 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
+
+// Serilog
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+);
 
 // Add services to the container.
 // Database
@@ -40,7 +48,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
-
+// Database migration
 builder.Host.MigrateDatabase();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

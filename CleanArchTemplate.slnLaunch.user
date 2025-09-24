@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Api + Workers",
+    "Projects": [
+      {
+        "Path": "src\\CleanArchTemplate.Api\\CleanArchTemplate.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\CleanArchTemplate.Workers\\CleanArchTemplate.Workers.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
