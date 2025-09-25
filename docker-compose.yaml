@@ -22,15 +22,20 @@ services:
       SA_PASSWORD: "PwdSql123"
     volumes:
       - sqlserver_data:/var/opt/mssql
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
+  
+  seq:
+    image: datalust/seq:2024.3
+    container_name: seq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - seq_data:/data
     ports:
-      - "16686:16686"  # Web interface
-      - "4317:4317"    # OTLP gRPC port
-      - "4318:4318"    # OTLP HTTP port
+      - "5341:5341"
+      - "8081:80"
 
 volumes:
   rabbitmq_data:
   sqlserver_data:
+  seq_data:
