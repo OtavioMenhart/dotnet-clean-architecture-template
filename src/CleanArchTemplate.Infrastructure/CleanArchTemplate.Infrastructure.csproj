@@ -19,7 +19,6 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" />
 		<PackageReference Include="RabbitMQ.Client.OpenTelemetry" />
 		<PackageReference Include="RabbitMq.Messaging.Toolkit" />
 	</ItemGroup>

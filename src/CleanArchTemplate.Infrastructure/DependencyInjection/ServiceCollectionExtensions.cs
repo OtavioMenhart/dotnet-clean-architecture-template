@@ -78,7 +78,6 @@ namespace CleanArchTemplate.Infrastructure.DependencyInjection
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddEntityFrameworkCoreInstrumentation()
-                        .AddSqlClientInstrumentation()
                         .AddRabbitMQInstrumentation()
                         .AddOtlpExporter(options =>
                         {
