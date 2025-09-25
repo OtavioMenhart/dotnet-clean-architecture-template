@@ -8,6 +8,9 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
+// OpenTelemetry
+builder.Services.RegisterOpenTelemetry(builder.Configuration, "Worker");
+
 // Serilog
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)

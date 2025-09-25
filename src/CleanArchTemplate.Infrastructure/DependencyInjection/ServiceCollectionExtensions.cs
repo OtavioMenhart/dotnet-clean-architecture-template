@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using RabbitMq.Messaging.DependencyInjection;
 
 namespace CleanArchTemplate.Infrastructure.DependencyInjection
@@ -60,6 +63,30 @@ namespace CleanArchTemplate.Infrastructure.DependencyInjection
                 }
             });
             return hostBuilder;
+        }
+
+        public static IServiceCollection RegisterOpenTelemetry(this IServiceCollection services, IConfiguration configuration, string applicationName)
+        {
+            var otlpEndpoint = configuration.GetValue<string>("OpenTelemetry:OtlpEndpoint");
+
+            services.AddOpenTelemetry()
+                .WithTracing(tracerProviderBuilder =>
+                {
+                    tracerProviderBuilder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(applicationName))
+                        .AddSource("*")
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddEntityFrameworkCoreInstrumentation()
+                        .AddSqlClientInstrumentation()
+                        .AddRabbitMQInstrumentation()
+                        .AddOtlpExporter(options =>
+                        {
+                            options.Endpoint = new Uri(otlpEndpoint); // OTLP HTTP endpoint
+                            options.Protocol = OtlpExportProtocol.HttpProtobuf;
+                        });
+                });
+            return services;
         }
     }
 }

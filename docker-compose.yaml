@@ -23,6 +23,14 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"  # Web interface
+      - "4317:4317"    # OTLP gRPC port
+      - "4318:4318"    # OTLP HTTP port
+
 volumes:
   rabbitmq_data:
   sqlserver_data:

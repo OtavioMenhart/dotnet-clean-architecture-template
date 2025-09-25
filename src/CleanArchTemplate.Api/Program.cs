@@ -20,6 +20,9 @@ builder.Host.UseSerilog((context, services, configuration) =>
         .ReadFrom.Services(services)
 );
 
+// OpenTelemetry
+builder.Services.RegisterOpenTelemetry(builder.Configuration, "Api");
+
 // Add services to the container.
 // Database
 builder.Services.AddDatabase(builder.Configuration);
