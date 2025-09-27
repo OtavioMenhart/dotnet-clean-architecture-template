@@ -21,11 +21,15 @@ builder.Host.UseSerilog((context, services, configuration) =>
 );
 
 // OpenTelemetry
-builder.Services.RegisterOpenTelemetry(builder.Configuration, "Api");
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.RegisterOpenTelemetry(builder.Configuration, "Api");
+
+    // Database
+    builder.Services.AddDatabase(builder.Configuration);
+}
 
 // Add services to the container.
-// Database
-builder.Services.AddDatabase(builder.Configuration);
 builder.Services.RegisterRepositories();
 
 // RabbitMQ
@@ -52,7 +56,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Database migration
-builder.Host.MigrateDatabase();
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.Host.MigrateDatabase();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -75,3 +80,5 @@ app.UseMiddleware<ClaimsValidationMiddleware>();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
