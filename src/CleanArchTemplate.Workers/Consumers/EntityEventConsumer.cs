@@ -8,16 +8,16 @@ namespace CleanArchTemplate.Workers.Consumers
     public class EntityEventConsumer : BaseConsumer<EntityEvent>
     {
         public EntityEventConsumer(
-            IConfiguration configuration, 
-            IConnection connection, 
-            ILogger<EntityEventConsumer> logger) 
+            IConfiguration configuration,
+            IConnection connection,
+            ILogger<EntityEventConsumer> logger)
             : base(
-                  configuration, 
-                  connection, 
+                  configuration,
+                  connection,
                   logger,
                   new[] {
                       new ExchangeBinding("entity-events-exchange", ExchangeType.Fanout, "")
-                  }, 
+                  },
                   "entity-events-queue")
         {
             //_parallelWorkerCount = 5; // The default is 5

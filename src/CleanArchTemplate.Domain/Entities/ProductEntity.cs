@@ -36,7 +36,7 @@ namespace CleanArchTemplate.Domain.Entities
 
             if (name.Length > EntitiesConstants.Product_Name_Max_Length)
                 throw new ArgumentException($"Product name cannot exceed {EntitiesConstants.Product_Name_Max_Length} characters.", nameof(name));
-            
+
             Name = name;
         }
 

@@ -25,9 +25,9 @@ namespace CleanArchTemplate.UnitTests.Api.Filters
                     ActionDescriptor = new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()
                 },
                 new List<IFilterMetadata>())
-                {
-                    Exception = exception
-                };
+            {
+                Exception = exception
+            };
 
             // Act
             filter.OnException(context);

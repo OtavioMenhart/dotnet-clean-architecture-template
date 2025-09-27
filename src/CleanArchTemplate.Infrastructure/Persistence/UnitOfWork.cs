@@ -40,7 +40,7 @@ namespace CleanArchTemplate.Infrastructure.Persistence
                 };
 
                 var eventMessage = new EntityEvent(eventType, entry.Entity.GetType().Name, entry.Entity.Id, entry.Entity);
-                
+
                 await _messagingService.PublishMessage(
                     eventMessage,
                     exchangeName: "entity-events-exchange",
