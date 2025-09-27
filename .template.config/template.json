@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Tools BR",
+  "classifications": [ "Web", "API", "Solution", "Clean Architecture" ],
+  "identity": "ToolsBR.CleanArchitecture.Template",
+  "name": "Your Clean Architecture Template",
+  "shortName": "clean-arch-tools-br",
+  "sourceName": "CleanArchTemplate",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sources": [
+    {
+      "include": [
+        "**/*"
+      ],
+      "exclude": [
+        ".vs/**",
+        ".vscode/**",
+        ".git/**",
+        ".github/**",
+        ".template.config/**",
+        "LICENSE"
+      ],
+      "modifiers": [
+        {
+          "rename": {
+            "README.template.md": "README.md"
+          }
+        }
+      ]
+    }
+  ]
+}
