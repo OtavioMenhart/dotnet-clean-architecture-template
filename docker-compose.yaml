@@ -26,7 +26,6 @@ services:
   seq:
     image: datalust/seq:2024.3
     container_name: seq
-    restart: always
     environment:
       - ACCEPT_EULA=Y
     volumes:
