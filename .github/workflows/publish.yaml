@@ -21,7 +21,7 @@ jobs:
         run: dotnet restore
 
       - name: Pack NuGet template
-        run: nuget pack CleanArchTemplate.nuspec
+        run: dotnet pack CleanArchTemplate.nuspec
 
       - name: Publish to NuGet
-        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push bin/Debug/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
