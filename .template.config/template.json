@@ -22,7 +22,7 @@
         ".github/**",
         ".template.config/**",
         "LICENSE",
-        "CleanArchTemplate.nuspec"
+        "CleanArchTemplate.csproj"
       ],
       "modifiers": [
         {
