@@ -21,7 +21,8 @@
         ".git/**",
         ".github/**",
         ".template.config/**",
-        "LICENSE"
+        "LICENSE",
+        "CleanArchTemplate.nuspec"
       ],
       "modifiers": [
         {
