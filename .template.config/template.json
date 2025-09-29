@@ -13,7 +13,9 @@
   "sources": [
     {
       "include": [
-        "**/*"
+        "**/*",
+        ".gitignore",
+        ".editorconfig"
       ],
       "exclude": [
         ".vs/**",
