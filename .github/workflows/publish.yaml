@@ -17,15 +17,15 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-version: '5.x'
+
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Install NuGet CLI
-        run: |
-          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-
       - name: Pack NuGet template
-        run: mono nuget.exe pack CleanArchTemplate.nuspec
+        run: nuget pack CleanArchTemplate.nuspec
 
       - name: Publish to NuGet
-        run: mono nuget.exe push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
+        run: nuget push *.nupkg -src https://api.nuget.org/v3/index.json ${{ secrets.NUGET_API_KEY }}
