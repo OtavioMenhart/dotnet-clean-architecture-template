@@ -1,6 +1,18 @@
-# dotnet-clean-architecture-template
+# Clean Architecture Template
 
-This repository implements a solution based on Clean Architecture using .NET 9, focusing on separation of concerns, testability, and scalability. Below is a detailed explanation of the projects in the solution, their roles, and the main technologies used.
+It implements a solution based on Clean Architecture using .NET 9, focusing on separation of concerns, testability, and scalability. Below is a detailed explanation of the projects in the solution, their roles, and the main technologies used.
+
+---
+
+## Usage of the Template
+```
+dotnet new install ToolsBR.CleanArchitecture.Template::VERSION
+```
+
+Go to your project folder and run:
+```
+dotnet new clean-arch-tools-br -n YOUR_PROJECT_NAME
+```
 
 ---
 
