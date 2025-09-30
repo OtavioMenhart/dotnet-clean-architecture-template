@@ -13,9 +13,7 @@
   "sources": [
     {
       "include": [
-        "**/*",
-        ".gitignore",
-        ".editorconfig"
+        "**/*"
       ],
       "exclude": [
         ".vs/**",
@@ -26,13 +24,11 @@
         "LICENSE",
         "CleanArchTemplate.csproj"
       ],
-      "modifiers": [
-        {
-          "rename": {
-            "README.template.md": "README.md"
-          }
-        }
-      ]
+      "rename": {
+        "__gitignore__": ".gitignore",
+        "__editorconfig__": ".editorconfig",
+        "README.template.md": "README.md"
+      }
     }
   ]
 }
