@@ -1,5 +1,8 @@
-﻿namespace CleanArchTemplate.Api.Responses;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace CleanArchTemplate.Api.Responses;
+
+[ExcludeFromCodeCoverage]
 public class ApiResponseList<T> : ApiResponse<IEnumerable<T>>
 {
     public int PageNumber { get; set; }

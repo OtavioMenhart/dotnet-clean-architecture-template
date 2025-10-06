@@ -1,5 +1,8 @@
-﻿namespace CleanArchTemplate.Api.Responses;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace CleanArchTemplate.Api.Responses;
+
+[ExcludeFromCodeCoverage]
 public class ApiResponse<T>
 {
     public bool Success { get; set; } = true;

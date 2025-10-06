@@ -10,9 +10,11 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using RabbitMq.Messaging.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CleanArchTemplate.Infrastructure.DependencyInjection;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)

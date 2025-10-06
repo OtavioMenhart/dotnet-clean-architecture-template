@@ -1,8 +1,10 @@
 ﻿using CleanArchTemplate.Application.Handlers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CleanArchTemplate.Application.DependencyInjection;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationHandlers(this IServiceCollection services)

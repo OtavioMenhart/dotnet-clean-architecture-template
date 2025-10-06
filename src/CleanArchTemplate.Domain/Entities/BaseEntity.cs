@@ -1,5 +1,8 @@
-﻿namespace CleanArchTemplate.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace CleanArchTemplate.Domain.Entities;
+
+[ExcludeFromCodeCoverage]
 public abstract class BaseEntity
 {
     public Guid Id { get; protected set; }

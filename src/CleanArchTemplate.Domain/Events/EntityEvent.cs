@@ -1,5 +1,8 @@
-﻿namespace CleanArchTemplate.Domain.Events;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace CleanArchTemplate.Domain.Events;
+
+[ExcludeFromCodeCoverage]
 public class EntityEvent
 {
     public string EventType { get; }
