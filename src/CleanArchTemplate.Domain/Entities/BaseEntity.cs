@@ -1,21 +1,20 @@
-﻿namespace CleanArchTemplate.Domain.Entities
+﻿namespace CleanArchTemplate.Domain.Entities;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
+    public Guid Id { get; protected set; }
+    public DateTime CreatedAt { get; protected set; }
+    public DateTime? UpdatedAt { get; protected set; }
+
+    protected BaseEntity()
     {
-        public Guid Id { get; protected set; }
-        public DateTime CreatedAt { get; protected set; }
-        public DateTime? UpdatedAt { get; protected set; }
+        Id = Guid.NewGuid();
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = null;
+    }
 
-        protected BaseEntity()
-        {
-            Id = Guid.NewGuid();
-            CreatedAt = DateTime.UtcNow;
-            UpdatedAt = null;
-        }
-
-        public void SetUpdated()
-        {
-            UpdatedAt = DateTime.UtcNow;
-        }
+    public void SetUpdated()
+    {
+        UpdatedAt = DateTime.UtcNow;
     }
 }

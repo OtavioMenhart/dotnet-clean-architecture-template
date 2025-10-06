@@ -4,37 +4,36 @@ using CleanArchTemplate.Domain.Entities;
 using CleanArchTemplate.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchTemplate.Application.UseCases.Product.UpdateProduct
+namespace CleanArchTemplate.Application.UseCases.Product.UpdateProduct;
+
+public class UpdateProductHandler : IHandler<UpdateProductCommand, ProductOutput>
 {
-    public class UpdateProductHandler : IHandler<UpdateProductCommand, ProductOutput>
+    private readonly IBaseRepository<ProductEntity> _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<UpdateProductHandler> _logger;
+
+    public UpdateProductHandler(IBaseRepository<ProductEntity> productRepository, IUnitOfWork unitOfWork, ILogger<UpdateProductHandler> logger)
     {
-        private readonly IBaseRepository<ProductEntity> _productRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<UpdateProductHandler> _logger;
+        _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
+        _logger = logger;
+    }
 
-        public UpdateProductHandler(IBaseRepository<ProductEntity> productRepository, IUnitOfWork unitOfWork, ILogger<UpdateProductHandler> logger)
+    public async Task<ProductOutput> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+    {
+        var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
+        if (product == null)
         {
-            _productRepository = productRepository;
-            _unitOfWork = unitOfWork;
-            _logger = logger;
+            _logger.LogWarning("Product with ID {ProductId} not found.", command.Id);
+            return null;
         }
 
-        public async Task<ProductOutput> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
-        {
-            var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
-            if (product == null)
-            {
-                _logger.LogWarning("Product with ID {ProductId} not found.", command.Id);
-                return null;
-            }
+        product.ChangeName(command.Input.Name);
+        product.ChangeUnitPrice(command.Input.UnitPrice);
 
-            product.ChangeName(command.Input.Name);
-            product.ChangeUnitPrice(command.Input.UnitPrice);
-
-            _productRepository.Update(product);
-            await _unitOfWork.CommitAsync(cancellationToken);
-            _logger.LogInformation("Product with ID {ProductId} updated successfully.", command.Id);
-            return ProductOutput.FromProductDomain(product);
-        }
+        _productRepository.Update(product);
+        await _unitOfWork.CommitAsync(cancellationToken);
+        _logger.LogInformation("Product with ID {ProductId} updated successfully.", command.Id);
+        return ProductOutput.FromProductDomain(product);
     }
 }

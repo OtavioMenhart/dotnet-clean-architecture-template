@@ -1,8 +1,7 @@
-﻿namespace CleanArchTemplate.Domain.Repositories
+﻿namespace CleanArchTemplate.Domain.Repositories;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        Task CommitAsync(CancellationToken cancellationToken);
-        Task RollbackAsync();
-    }
+    Task CommitAsync(CancellationToken cancellationToken);
+    Task RollbackAsync();
 }

@@ -1,36 +1,35 @@
-﻿namespace CleanArchTemplate.Api.Middlewares
+﻿namespace CleanArchTemplate.Api.Middlewares;
+
+public class ClaimsValidationMiddleware
 {
-    public class ClaimsValidationMiddleware
+    private readonly RequestDelegate _next;
+
+    public ClaimsValidationMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ClaimsValidationMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        // Validate that the JWT contains the required claims
+        /*if (context.User?.Identity?.IsAuthenticated == true)
         {
-            _next = next;
-        }
+            var name = context.User.FindFirst("name")?.Value;
+            var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            // Validate that the JWT contains the required claims
-            /*if (context.User?.Identity?.IsAuthenticated == true)
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email))
             {
-                var name = context.User.FindFirst("name")?.Value;
-                var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
-
-                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email))
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsJsonAsync(new ProblemDetails
                 {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsJsonAsync(new ProblemDetails
-                    {
-                        Status = StatusCodes.Status401Unauthorized,
-                        Title = "Unauthorized",
-                        Detail = "Token JWT must have claims 'name' and 'email'."
-                    });
-                    return;
-                }
-            }*/
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = "Unauthorized",
+                    Detail = "Token JWT must have claims 'name' and 'email'."
+                });
+                return;
+            }
+        }*/
 
-            await _next(context);
-        }
+        await _next(context);
     }
 }

@@ -1,16 +1,6 @@
 ﻿using CleanArchTemplate.Application.Handlers;
 using CleanArchTemplate.Application.UseCases.Product.Common;
 
-namespace CleanArchTemplate.Application.UseCases.Product.CreateProduct
-{
-    public class CreateProductCommand : IRequest<ProductOutput>
-    {
-        public CreateProductInput Input { get; }
-        // Add other properties or methods if needed
+namespace CleanArchTemplate.Application.UseCases.Product.CreateProduct;
 
-        public CreateProductCommand(CreateProductInput input)
-        {
-            Input = input;
-        }
-    }
-}
+public record CreateProductCommand(CreateProductInput Input) : IRequest<ProductOutput>;

@@ -1,8 +1,8 @@
 ﻿using CleanArchTemplate.Domain.Entities;
 using CleanArchTemplate.Domain.Resources;
 
-namespace CleanArchTemplate.UnitTests.Domain.Entities
-{
+namespace CleanArchTemplate.UnitTests.Domain.Entities;
+
     public class ProductEntityTests
     {
         [Fact]
@@ -72,4 +72,3 @@ namespace CleanArchTemplate.UnitTests.Domain.Entities
             Assert.Throws<ArgumentOutOfRangeException>(() => product.ChangeUnitPrice(EntitiesConstants.Product_UnitPrice_Min_Value - 0.01));
         }
     }
-}

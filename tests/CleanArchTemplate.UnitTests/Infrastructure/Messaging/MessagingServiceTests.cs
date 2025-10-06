@@ -3,80 +3,79 @@ using Moq;
 using RabbitMq.Messaging.Publisher;
 using System.Text.Json;
 
-namespace CleanArchTemplate.UnitTests.Infrastructure.Messaging
+namespace CleanArchTemplate.UnitTests.Infrastructure.Messaging;
+
+public class MessagingServiceTests
 {
-    public class MessagingServiceTests
+    [Fact]
+    public async Task PublishMessage_CallsPublisherWithCorrectParameters()
     {
-        [Fact]
-        public async Task PublishMessage_CallsPublisherWithCorrectParameters()
-        {
-            // Arrange
-            var publisherMock = new Mock<IRabbitMqPublisherService>();
-            var service = new MessagingService(publisherMock.Object);
+        // Arrange
+        var publisherMock = new Mock<IRabbitMqPublisherService>();
+        var service = new MessagingService(publisherMock.Object);
 
-            var message = new { Name = "Test" };
-            var exchangeName = "exchange";
-            var headers = new Dictionary<string, string> { { "key", "value" } };
-            var serializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var exchangeType = "fanout";
-            var routingKey = "route";
+        var message = new { Name = "Test" };
+        var exchangeName = "exchange";
+        var headers = new Dictionary<string, string> { { "key", "value" } };
+        var serializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        var exchangeType = "fanout";
+        var routingKey = "route";
 
-            publisherMock
-                .Setup(p => p.PublishMessage(
-                    message,
-                    exchangeName,
-                    headers,
-                    serializerOptions,
-                    exchangeType,
-                    routingKey))
-                .Returns(Task.CompletedTask)
-                .Verifiable();
-
-            // Act
-            await service.PublishMessage(message, exchangeName, headers, serializerOptions, exchangeType, routingKey);
-
-            // Assert
-            publisherMock.Verify(p => p.PublishMessage(
+        publisherMock
+            .Setup(p => p.PublishMessage(
                 message,
                 exchangeName,
                 headers,
                 serializerOptions,
                 exchangeType,
-                routingKey), Times.Once);
-        }
+                routingKey))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
 
-        [Fact]
-        public async Task PublishMessage_AllowsNullOptionalParameters()
-        {
-            // Arrange
-            var publisherMock = new Mock<IRabbitMqPublisherService>();
-            var service = new MessagingService(publisherMock.Object);
+        // Act
+        await service.PublishMessage(message, exchangeName, headers, serializerOptions, exchangeType, routingKey);
 
-            var message = "simple";
-            var exchangeName = "exchange";
+        // Assert
+        publisherMock.Verify(p => p.PublishMessage(
+            message,
+            exchangeName,
+            headers,
+            serializerOptions,
+            exchangeType,
+            routingKey), Times.Once);
+    }
 
-            publisherMock
-                .Setup(p => p.PublishMessage(
-                    message,
-                    exchangeName,
-                    null,
-                    null,
-                    "fanout",
-                    ""))
-                .Returns(Task.CompletedTask)
-                .Verifiable();
+    [Fact]
+    public async Task PublishMessage_AllowsNullOptionalParameters()
+    {
+        // Arrange
+        var publisherMock = new Mock<IRabbitMqPublisherService>();
+        var service = new MessagingService(publisherMock.Object);
 
-            // Act
-            await service.PublishMessage(message, exchangeName);
+        var message = "simple";
+        var exchangeName = "exchange";
 
-            // Assert
-            publisherMock.Verify(p => p.PublishMessage(
+        publisherMock
+            .Setup(p => p.PublishMessage(
                 message,
                 exchangeName,
                 null,
                 null,
                 "fanout",
-                ""), Times.Once);
-        }
+                ""))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
+        // Act
+        await service.PublishMessage(message, exchangeName);
+
+        // Assert
+        publisherMock.Verify(p => p.PublishMessage(
+            message,
+            exchangeName,
+            null,
+            null,
+            "fanout",
+            ""), Times.Once);
     }
 }

@@ -1,41 +1,40 @@
 using AutoFixture;
 using CleanArchTemplate.Api.Responses;
 
-namespace CleanArchTemplate.UnitTests.Api.Responses
+namespace CleanArchTemplate.UnitTests.Api.Responses;
+
+public class ApiResponseTests
 {
-    public class ApiResponseTests
+    private readonly Fixture _fixture = new();
+
+    [Fact]
+    public void Constructor_SetsDataAndMessage()
     {
-        private readonly Fixture _fixture = new();
+        var data = _fixture.Create<string>();
+        var message = _fixture.Create<string>();
 
-        [Fact]
-        public void Constructor_SetsDataAndMessage()
-        {
-            var data = _fixture.Create<string>();
-            var message = _fixture.Create<string>();
+        var response = new ApiResponse<string>(data, message);
 
-            var response = new ApiResponse<string>(data, message);
+        Assert.True(response.Success);
+        Assert.Equal(data, response.Data);
+        Assert.Equal(message, response.Message);
+    }
 
-            Assert.True(response.Success);
-            Assert.Equal(data, response.Data);
-            Assert.Equal(message, response.Message);
-        }
+    [Fact]
+    public void Constructor_SetsSuccessTrueByDefault()
+    {
+        var response = new ApiResponse<int>(42);
 
-        [Fact]
-        public void Constructor_SetsSuccessTrueByDefault()
-        {
-            var response = new ApiResponse<int>(42);
+        Assert.True(response.Success);
+    }
 
-            Assert.True(response.Success);
-        }
+    [Fact]
+    public void Constructor_AllowsNullDataAndMessage()
+    {
+        var response = new ApiResponse<object>(null, null);
 
-        [Fact]
-        public void Constructor_AllowsNullDataAndMessage()
-        {
-            var response = new ApiResponse<object>(null, null);
-
-            Assert.True(response.Success);
-            Assert.Null(response.Data);
-            Assert.Null(response.Message);
-        }
+        Assert.True(response.Success);
+        Assert.Null(response.Data);
+        Assert.Null(response.Message);
     }
 }
