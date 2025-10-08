@@ -133,6 +133,21 @@ The solution is divided into projects according to Clean Architecture principles
 
 ---
 
+### tests/CleanArchTemplate.LoadTests/CleanArchTemplate.LoadTests.csproj
+
+**Type:** Load Tests  
+**Role:** Perform load and performance testing against the API and background services.  
+**Technologies:**  
+- NBomber (load testing framework)
+- NBomber.Http (HTTP load testing)
+- .NET 9
+
+**Highlights:**  
+- Simulates concurrent requests and load scenarios.
+- References the Application layer for realistic test orchestration.
+
+---
+
 ## Technologies Used
 
 - **.NET 9 / C# 13.0**
@@ -153,6 +168,18 @@ The solution is divided into projects according to Clean Architecture principles
 ```
    docker-compose up -d
 ```
+
+2. To run the API and Workers together, use the profile:
+```
+   Api + Workers
+```
+This profile ensures all necessary services are executed in an integrated environment.
+
+3. To run the API, Workers, and Load Tests together, use the profile:
+```
+   Api + Workers + Load Tests
+```
+This profile ensures all necessary services and load tests are executed in an integrated environment.
 
 ---
 

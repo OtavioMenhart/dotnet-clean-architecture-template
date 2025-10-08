@@ -51,6 +51,7 @@ Este template implementa Clean Architecture em .NET 9, incluindo mensageria Rabb
 ## Testes
 - Use xUnit, Moq e AutoFixture para testes unitários.
 - Use Testcontainers para simular RabbitMQ e banco de dados em testes de integração.
+- Teste de carga com NBomber
 
 ---
 
