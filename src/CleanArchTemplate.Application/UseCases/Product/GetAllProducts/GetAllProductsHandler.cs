@@ -19,14 +19,14 @@ public class GetAllProductsHandler : IHandler<GetAllProductsQuery, GetAllProduct
 
     public async Task<GetAllProductsOutput> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        var totalProducts = await _productRepository.CountAsync(cancellationToken);
+        var totalProducts = await _productRepository.CountAsync(cancellationToken).ConfigureAwait(false);
         if (totalProducts == 0)
         {
             _logger.LogWarning("No products found in the repository.");
             return new GetAllProductsOutput(Enumerable.Empty<ProductOutput>(), request.PageNumber, request.PageSize, 0);
         }
 
-        var products = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var products = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("Retrieved {ProductCount} products for page {PageNumber} with page size {PageSize}.", products.Count(), request.PageNumber, request.PageSize);
         return new GetAllProductsOutput(products.Select(ProductOutput.FromProductDomain), request.PageNumber, request.PageSize, totalProducts);
     }

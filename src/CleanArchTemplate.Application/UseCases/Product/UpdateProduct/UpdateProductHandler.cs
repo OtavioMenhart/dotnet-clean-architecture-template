@@ -21,7 +21,7 @@ public class UpdateProductHandler : IHandler<UpdateProductCommand, ProductOutput
 
     public async Task<ProductOutput> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
+        var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken).ConfigureAwait(false);
         if (product == null)
         {
             _logger.LogWarning("Product with ID {ProductId} not found.", command.Id);
@@ -32,7 +32,7 @@ public class UpdateProductHandler : IHandler<UpdateProductCommand, ProductOutput
         product.ChangeUnitPrice(command.Input.UnitPrice);
 
         _productRepository.Update(product);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("Product with ID {ProductId} updated successfully.", command.Id);
         return ProductOutput.FromProductDomain(product);
     }

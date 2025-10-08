@@ -78,7 +78,7 @@ app.UseAuthorization();
 app.UseMiddleware<ClaimsValidationMiddleware>();
 
 app.MapControllers();
-
-app.Run();
+app.UseSerilogRequestLogging();
+await app.RunAsync();
 
 public partial class Program { }

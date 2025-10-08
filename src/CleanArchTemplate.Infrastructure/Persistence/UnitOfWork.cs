@@ -48,7 +48,7 @@ public class UnitOfWork : IUnitOfWork
             );
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task RollbackAsync()

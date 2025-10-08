@@ -41,16 +41,17 @@ public class ProductController : ControllerBase
     /// error response in case of failure.</remarks>
     /// <param name="input">The input data required to create the product. This includes details such as the product name and 
     /// unit price.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An <see cref="IActionResult"/> containing an <see cref="ApiResponse{T}"/> with the created product details
     /// if the operation is successful. Returns a <see cref="ProblemDetails"/> response if an internal server error
     /// occurs.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<ProductOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductInput input)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductInput input, CancellationToken cancellationToken = default)
     {
         var command = new CreateProductCommand(input);
-        var result = await _createProductHandler.Handle(command, CancellationToken.None);
+        var result = await _createProductHandler.Handle(command, cancellationToken);
         return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, new ApiResponse<ProductOutput>(result));
     }
 
@@ -58,15 +59,16 @@ public class ProductController : ControllerBase
     /// Gets a product by its unique identifier.
     /// </summary>
     /// <param name="id">The product's unique identifier.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An ApiResponse with the product details, or NotFound if not found.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<ProductOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetProductById(Guid id)
+    public async Task<IActionResult> GetProductById(Guid id, CancellationToken cancellationToken = default)
     {
         var query = new GetProductByIdQuery(id);
-        var result = await _getProductByIdHandler.Handle(query, CancellationToken.None);
+        var result = await _getProductByIdHandler.Handle(query, cancellationToken);
 
         if (result == null)
             return NotFound();
@@ -82,6 +84,7 @@ public class ProductController : ControllerBase
     /// response is returned.</remarks>
     /// <param name="pageNumber">The page number to retrieve. Must be 1 or greater. Defaults to 1.</param>
     /// <param name="pageSize">The number of products per page. Must be 1 or greater. Defaults to 10.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An <see cref="IActionResult"/> containing a paginated list of products wrapped in an  <see
     /// cref="ApiResponseList{T}"/> with a status code of 200 (OK) if products are found. Returns a <see
     /// cref="ProblemDetails"/> with a status code of 404 (Not Found) if no products are available. Returns a <see
@@ -92,10 +95,11 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllProducts(
         [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 10, 
+        CancellationToken cancellationToken = default)
     {
         var query = new GetAllProductsQuery(pageNumber, pageSize);
-        var products = await _getAllProductsHandler.Handle(query, CancellationToken.None);
+        var products = await _getAllProductsHandler.Handle(query, cancellationToken);
 
         if (products == null || products.Products == null || !products.Products.Any())
             return NotFound();
@@ -112,15 +116,16 @@ public class ProductController : ControllerBase
     /// Deletes a product by its unique identifier.
     /// </summary>
     /// <param name="id">The product's unique identifier.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>NoContent if deleted, NotFound if not found, or ProblemDetails if error.</returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteProduct(Guid id)
+    public async Task<IActionResult> DeleteProduct(Guid id, CancellationToken cancellationToken = default)
     {
         var command = new DeleteProductCommand(id);
-        var deleted = await _deleteProductHandler.Handle(command, CancellationToken.None);
+        var deleted = await _deleteProductHandler.Handle(command, cancellationToken);
 
         if (!deleted)
             return NotFound();
@@ -133,15 +138,16 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <param name="id">The product's unique identifier.</param>
     /// <param name="input">The updated product data.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An ApiResponse with the updated product details, or NotFound if not found.</returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<ProductOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductInput input)
+    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductInput input, CancellationToken cancellationToken = default)
     {
         var command = new UpdateProductCommand(id, input);
-        var result = await _updateProductHandler.Handle(command, CancellationToken.None);
+        var result = await _updateProductHandler.Handle(command, cancellationToken);
 
         if (result == null)
             return NotFound();

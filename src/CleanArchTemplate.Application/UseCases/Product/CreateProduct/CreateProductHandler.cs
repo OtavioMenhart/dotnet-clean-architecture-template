@@ -22,8 +22,8 @@ public class CreateProductHandler : IHandler<CreateProductCommand, ProductOutput
     public async Task<ProductOutput> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = new ProductEntity(request.Input.Name, request.Input.UnitPrice);
-        await _productRepository.AddAsync(product, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
+        await _unitOfWork.CommitAsync(cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("Product created with ID: {ProductId}", product.Id);
         return ProductOutput.FromProductDomain(product);
     }

@@ -19,7 +19,7 @@ public class GetProductByIdHandler : IHandler<GetProductByIdQuery, ProductOutput
 
     public async Task<ProductOutput> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
+        var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
         if (product == null)
         {
             _logger.LogWarning("Product with ID {ProductId} not found.", request.Id);

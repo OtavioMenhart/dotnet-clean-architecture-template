@@ -15,10 +15,10 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        => await _dbSet.FindAsync(id, cancellationToken);
+        => await _dbSet.FindAsync(id, cancellationToken).ConfigureAwait(false);
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
-        => await _dbSet.ToListAsync(cancellationToken);
+        => await _dbSet.ToListAsync(cancellationToken).ConfigureAwait(false);
 
     public virtual async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
@@ -29,17 +29,18 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
             .OrderBy(e => e.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        await _dbSet.AddAsync(entity, cancellationToken);
+        await _dbSet.AddAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
     public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
     {
-        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        await _dbSet.AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
     }
 
     public virtual void Update(TEntity entity)
@@ -50,7 +51,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
 
     public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await GetByIdAsync(id, cancellationToken);
+        var entity = await GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
         if (entity != null)
         {
             _dbSet.Remove(entity);
@@ -58,8 +59,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     }
 
     public virtual async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken)
-        => await _dbSet.FindAsync(id, cancellationToken) != null;
+        => await _dbSet.FindAsync(id, cancellationToken).ConfigureAwait(false) != null;
 
     public virtual async Task<int> CountAsync(CancellationToken cancellationToken)
-        => await _dbSet.CountAsync(cancellationToken);
+        => await _dbSet.CountAsync(cancellationToken).ConfigureAwait(false);
 }

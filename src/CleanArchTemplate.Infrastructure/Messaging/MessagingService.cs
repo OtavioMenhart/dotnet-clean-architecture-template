@@ -24,6 +24,6 @@ public class MessagingService : IMessagingService
             headers,
             serializerOptions,
             exchangeType,
-            routingKey);
+            routingKey).ConfigureAwait(false);
     }
 }

@@ -19,11 +19,11 @@ public class DeleteProductHandler : IHandler<DeleteProductCommand, bool>
     }
     public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var exists = await _productRepository.ExistsAsync(request.Id, cancellationToken);
+        var exists = await _productRepository.ExistsAsync(request.Id, cancellationToken).ConfigureAwait(false);
         if (!exists) return false;
 
-        await _productRepository.DeleteAsync(request.Id, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _productRepository.DeleteAsync(request.Id, cancellationToken).ConfigureAwait(false);
+        await _unitOfWork.CommitAsync(cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("Product deleted with ID: {ProductId}", request.Id);
         return true;
     }
