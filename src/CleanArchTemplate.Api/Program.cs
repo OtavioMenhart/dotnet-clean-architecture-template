@@ -2,7 +2,7 @@ using CleanArchTemplate.Api.Filters;
 using CleanArchTemplate.Api.Middlewares;
 using CleanArchTemplate.Application.DependencyInjection;
 using CleanArchTemplate.Infrastructure.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Serilog;
 using System.Reflection;
 
